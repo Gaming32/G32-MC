@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public Transform head;
+    private int view = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -15,11 +16,26 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetButtonDown("Toggle Perspective"))
+        {
+            Transform setValue;
+            Transform child = transform.GetChild(0);
+            view++; view %= 3;
+            if (view == 0)
+                setValue = child.GetChild(1);
+            else if (view == 1)
+                setValue = child.GetChild(2);
+            else
+                setValue = child.GetChild(3);
+            Camera.main.transform.localPosition = setValue.localPosition;
+            Camera.main.transform.localRotation = setValue.localRotation;
+            Camera.main.transform.localScale = setValue.localScale;
+        }
         if (transform.position.y < 0)
             Camera.main.clearFlags = CameraClearFlags.SolidColor;
         else
             Camera.main.clearFlags = CameraClearFlags.Skybox;
-        if (Input.GetButton("Strafe"))
+        if (Input.GetButton("Sneak"))
             transform.position += 2f * Time.deltaTime * Vector3.down;
         if (Input.GetButton("Jump"))
             transform.position += 2f * Time.deltaTime * Vector3.up;
